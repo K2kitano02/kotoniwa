@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #13ec13;
+  --color-background-light: #fcfdfc;
+  --color-background-dark: #0d150d;
+  --font-family-serif: "Noto Serif JP", serif;
+  --font-family-sans: "Plus Jakarta Sans", sans-serif;
+  --radius-default: 0.5rem;
+  --radius-full: 9999px;
+}
+
+@layer base {
+  body {
+    font-family: "Noto Serif JP", serif;
+    letter-spacing: 0.1em;
+  }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+  @media (max-width: 640px) {
+    .vertical-text {
+      letter-spacing: 0.3em;
+    }
+  }
+}
