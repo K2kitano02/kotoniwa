@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
     <title><%= content_for(:title) || "Myapp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,8 +19,12 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="<%= content_for(:body_class) %>">
-    <%= yield %>
+  <body class="min-h-screen flex flex-col <%= content_for(:body_class) %>">
+    <%= render "shared/header" %>
+    <main class="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <%= render "shared/flash" %>
+      <%= yield %>
+    </main>
     <%= render "shared/footer" %>
   </body>
 </html>
