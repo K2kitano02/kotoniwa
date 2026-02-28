@@ -20,6 +20,8 @@
   .vertical-text {
     writing-mode: vertical-rl;
     text-orientation: upright;
+    display: inline-block;
+    width: fit-content;
   }
   @media (max-width: 640px) {
     .vertical-text {
