@@ -1,24 +1,16 @@
-# README
+# サービス概要
+---
+言庭はユーザーがそれぞれ好きな歌詞や名言などを記録し共有するWebアプリです
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# なぜこのサービスを作ったのか
+---
+言庭は、僕自身が音楽や映画の言葉から影響を受け前向きになったり、
+勇気をもらったり、価値観をもらったりする機会が多いことから作成しました。
+この投稿の中から一つでも新たな音楽、映画など知れたりすればいいなと思います。
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# このサービスの利用イメージ
+- 自分が喰らった名言やパンチラインを理由づけで投稿する
+- 他人の投稿から良さそうな歌詞や名言を見つけ鑑賞したり価値観を広げる
+- コメントで感想を言い合う
+- いいねでコメントより敷居を低く相手の投稿にFeedbackを送る
+- bookmarkでコレクションし、見逃さないようにする
