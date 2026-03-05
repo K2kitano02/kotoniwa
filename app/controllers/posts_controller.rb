@@ -2,8 +2,15 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy]
   before_action :require_login, only: %i[new create edit update destroy]
   before_action :authorize_post_owner, only: %i[edit update destroy]
-  def index #公開されている投稿を一覧表示(最新順)
+  def index
     @posts = Post.public_post.order(created_at: :desc)
+    @posts = @posts.where(category: params[:category]) if params[:category].present? && Post.categories.key?(params[:category])
+    # 検索欄に何か入ってる時のみ検索する。
+    if params[:q].present?
+      # 必ず文字列にする #.string.stripで空白を削除
+      q = "%#{params[:q].to_s.strip}%"
+      @posts = @posts.where("title ILIKE :q OR body ILIKE :q OR work_name ILIKE :q", q: q)
+    end
   end
   def new
     @post = current_user.posts.build
@@ -27,7 +34,6 @@ class PostsController < ApplicationController
   end
 
   def edit
-    
   end
 
   def update
@@ -38,7 +44,7 @@ class PostsController < ApplicationController
       flash.now[:alert] = "投稿の更新に失敗しました"
     end
   end
-  
+
   def destroy
     @post.destroy
     redirect_to posts_path, notice: "投稿を削除しました"

@@ -1,0 +1,78 @@
+<% content_for :body_class, "bg-[#f8fafc] dark:bg-[#0d150d] text-slate-900 dark:text-slate-100" %>
+<% content_for :title, "名言一覧 - 言庭" %>
+
+<div class="flex-1 min-h-0 overflow-auto">
+  <div class="w-full max-w-[1200px] mx-auto px-6 py-6 pb-24">
+    <%# 検索 %>
+    <div class="mt-4 mb-8 space-y-6">
+      <%= form_with url: posts_path, method: :get, local: true, class: "relative w-full max-w-2xl mx-auto block" do |f| %>
+        <%= f.hidden_field :category, value: params[:category] if params[:category].present? %>
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">search</span>
+        <%= f.text_field :q, value: params[:q], class: "w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm focus:ring-2 focus:ring-primary/50 text-lg transition-all", placeholder: "心に響く言葉を探す" %>
+      <% end %>
+
+      <%# カテゴリタグ（本アプリの enum に合わせる） %>
+      <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar justify-start md:justify-center">
+        <%= link_to posts_path(q: params[:q]), class: "flex h-10 shrink-0 items-center justify-center px-6 rounded-full font-bold text-sm transition-colors #{params[:category].blank? ? 'bg-primary text-slate-900' : 'bg-white dark:bg-slate-800 hover:bg-primary/10 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium'}" do %>
+          すべて
+        <% end %>
+        <% Post.categories.keys.each do |cat| %>
+          <%= link_to posts_path(category: cat, q: params[:q]), class: "flex h-10 shrink-0 items-center justify-center px-6 rounded-full text-sm transition-colors #{params[:category] == cat ? 'bg-primary text-slate-900 font-bold' : 'bg-white dark:bg-slate-800 hover:bg-primary/10 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium'}" do %>
+            <%= post_category_label(cat) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# 投稿カードグリッド %>
+    <div class="masonry-grid">
+      <% @posts.each do |post| %>
+        <%= link_to post_path(post), class: "block bg-white dark:bg-slate-800 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col justify-between group hover:shadow-md transition-shadow min-h-[240px]" do %>
+          <div>
+            <span class="material-symbols-outlined text-primary/40 text-4xl mb-4">format_quote</span>
+            <p class="text-xl font-medium leading-relaxed text-slate-800 dark:text-slate-100 mb-6 line-clamp-3">
+              <%= post.body %>
+            </p>
+          </div>
+          <div class="flex items-center justify-between mt-4">
+            <span class="text-sm text-slate-500 dark:text-slate-400 truncate"><%= post.work_name %></span>
+            <div class="flex gap-2 shrink-0">
+              <span class="p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex">
+                <span class="material-symbols-outlined text-xl">favorite</span>
+              </span>
+              <span class="p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex">
+                <span class="material-symbols-outlined text-xl">bookmark</span>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%# 綴る CTA カード（ログイン時は新規投稿、未ログイン時はログインへ） %>
+      <div class="bg-primary/5 dark:bg-primary/10 p-8 rounded-xl border-2 border-dashed border-primary/30 flex flex-col justify-center items-center text-center gap-4 min-h-[240px]">
+        <span class="material-symbols-outlined text-primary text-4xl">edit_note</span>
+        <p class="text-slate-600 dark:text-slate-300 font-medium">あなたの心に残っている<br/>言葉を綴ってみませんか？</p>
+        <% if current_user %>
+          <%= link_to "綴る", new_post_path, class: "mt-2 bg-primary text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:shadow-lg transition-shadow" %>
+        <% else %>
+          <%= link_to "綴る", login_path, class: "mt-2 bg-primary text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:shadow-lg transition-shadow" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# フローティングアクションボタン（綴る） %>
+<div class="fixed bottom-8 right-8 z-40">
+  <% if current_user %>
+    <%= link_to new_post_path, class: "flex items-center justify-center gap-2 bg-primary text-slate-900 px-6 py-4 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all font-bold tracking-wider text-base" do %>
+      <span class="material-symbols-outlined text-2xl font-bold">edit</span>
+      <span>綴る</span>
+    <% end %>
+  <% else %>
+    <%= link_to login_path, class: "flex items-center justify-center gap-2 bg-primary text-slate-900 px-6 py-4 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all font-bold tracking-wider text-base" do %>
+      <span class="material-symbols-outlined text-2xl font-bold">edit</span>
+      <span>綴る</span>
+    <% end %>
+  <% end %>
+</div>
