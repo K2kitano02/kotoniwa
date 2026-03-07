@@ -1,0 +1,84 @@
+<div class="w-full max-w-xl mx-auto mb-4">
+  <%= render "shared/error_message", object: @post %>
+</div>
+<div class="w-full bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-lg shadow-primary/5 origin-center max-w-xl mx-auto">
+  <div class="p-6">
+    <div class="mb-4">
+      <h2 class="text-2xl font-bold mb-2 text-slate-900 dark:text-slate-100"><%= @post.new_record? ? "新しい言葉を紡ぐ" : "投稿を編集" %></h2>
+      <p class="text-slate-500 dark:text-slate-400 text-sm">あなたの心に深く刻まれた言葉を、静かに書き留めましょう。</p>
+    </div>
+
+    <%= form_with model: @post, local: true, class: "space-y-4" do |f| %>
+      <%# 見出し（タイトル） %>
+      <div class="space-y-1">
+        <%= f.label :title, "見出し", class: "block text-sm font-bold text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :title, class: "w-full p-3 bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all text-base h-11", placeholder: "投稿のタイトル" %>
+      </div>
+
+      <%# 名言・歌詞 %>
+      <div class="space-y-1">
+        <%= f.label :body, "名言・歌詞", class: "block text-sm font-bold text-slate-700 dark:text-slate-300" %>
+        <%= f.text_area :body, rows: 3, class: "w-full p-3 bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none transition-all text-base leading-relaxed min-h-[100px]", placeholder: "あなたの心に残っている言葉を綴ってみませんか？" %>
+      </div>
+
+      <%# 作者名 %>
+      <div class="space-y-1">
+        <%= f.label :work_name, "作品名・キャラネーム・歌手名など", class: "block text-sm font-bold text-slate-700 dark:text-slate-300" %>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 pointer-events-none text-xl">person_edit</span>
+          <%= f.text_field :work_name, class: "w-full pl-12 pr-4 bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all h-11", placeholder: "例：ONE PIECE" %>
+        </div>
+      </div>
+
+      <%# カテゴリー %>
+      <div class="space-y-1">
+        <span class="block text-sm font-bold text-slate-700 dark:text-slate-300">カテゴリー</span>
+        <div class="flex flex-wrap gap-2">
+          <% Post.categories.keys.each do |cat| %>
+            <label class="cursor-pointer">
+              <%= f.radio_button :category, cat, class: "sr-only peer" %>
+              <span class="inline-block px-5 py-2 rounded-full border text-sm font-medium transition-colors bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-primary/50 peer-checked:bg-primary/10 peer-checked:text-primary peer-checked:border-primary/30"><%= post_category_label(cat) %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <%# 背景画像（任意・表示のみ） %>
+      <div class="space-y-1">
+        <span class="block text-sm font-bold text-slate-700 dark:text-slate-300">背景画像（任意）</span>
+        <div class="relative">
+          <div class="flex flex-col items-center justify-center w-full h-16 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:border-primary/50 transition-colors cursor-pointer group">
+            <div class="flex flex-col items-center justify-center">
+              <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors mb-1 text-2xl">image</span>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">ドラッグ＆ドロップ、またはファイルを選択</p>
+            </div>
+            <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer pointer-events-none" tabindex="-1" aria-hidden="true" disabled />
+          </div>
+        </div>
+      </div>
+
+      <%# 公開設定 %>
+      <div class="space-y-1">
+        <span class="block text-sm font-bold text-slate-700 dark:text-slate-300">公開設定</span>
+        <div class="flex gap-4 p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl w-fit">
+          <label class="relative flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all">
+            <%= f.radio_button :is_public, true, class: "sr-only peer" %>
+            <span class="material-symbols-outlined text-slate-400 peer-checked:text-primary z-10">public</span>
+            <span class="text-sm font-medium text-slate-500 peer-checked:text-slate-900 dark:peer-checked:text-white z-10">公開</span>
+          </label>
+          <label class="relative flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all">
+            <%= f.radio_button :is_public, false, class: "sr-only peer" %>
+            <span class="material-symbols-outlined text-slate-400 peer-checked:text-primary z-10">lock</span>
+            <span class="text-sm font-medium text-slate-500 peer-checked:text-slate-900 dark:peer-checked:text-white z-10">非公開</span>
+          </label>
+        </div>
+      </div>
+
+      <%# 送信・キャンセル %>
+      <div class="flex flex-col gap-2 pt-2">
+        <%= f.submit @post.new_record? ? "言葉を綴る" : "更新する", class: "w-full h-12 bg-primary hover:bg-primary/90 text-slate-900 font-bold text-lg rounded-xl transition-all shadow-lg shadow-primary/20 active:scale-[0.98] cursor-pointer" %>
+        <%= link_to "キャンセル", posts_path, class: "w-full py-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-sm font-medium transition-colors text-center" %>
+      </div>
+    <% end %>
+  </div>
+</div>
