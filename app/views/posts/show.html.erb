@@ -1,0 +1,70 @@
+<% content_for :body_class, "bg-[#f6f8f6] dark:bg-[#0d150d] text-slate-900 dark:text-slate-100 min-h-screen" %>
+<% content_for :title, "#{@post.title} - 言庭" %>
+
+<div class="flex-1 min-h-0 flex flex-col overflow-auto">
+  <main class="flex-grow flex flex-col items-center px-6 py-8 md:py-12 gap-10">
+    <div class="w-full max-w-lg">
+      <article class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-primary/5 border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col">
+        <div class="p-8">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20"><%= post_category_label(@post.category) %></span>
+            <span class="text-slate-400 text-xs tracking-widest uppercase">言庭</span>
+          </div>
+          <div class="relative py-4 mb-8">
+            <span class="material-symbols-outlined absolute -top-2 -left-4 text-primary/20 text-5xl select-none pointer-events-none">format_quote</span>
+            <blockquote class="quote-text text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed relative z-10">
+              「<%= @post.body %>」
+            </blockquote>
+            <cite class="block mt-6 text-right text-slate-500 dark:text-slate-400 font-medium not-italic">
+              — <%= @post.work_name %>
+            </cite>
+          </div>
+          <% if current_user && @post.user_id == current_user.id %>
+            <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent my-6"></div>
+            <div class="flex items-center gap-3">
+              <%= link_to "編集", edit_post_path(@post), class: "text-sm font-medium text-primary hover:underline" %>
+              <%= button_to "削除", post_path(@post), method: :delete, data: { turbo_confirm: "この投稿を削除しますか？" }, class: "text-sm font-medium text-red-600 dark:text-red-400 hover:underline bg-transparent border-none cursor-pointer p-0" %>
+            </div>
+          <% end %>
+        </div>
+        <div class="px-8 py-4 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-6">
+            <span class="flex items-center gap-1.5 text-slate-500">
+              <span class="material-symbols-outlined text-[22px]">favorite</span>
+              <span class="text-xs font-semibold">0</span>
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-500">
+              <span class="material-symbols-outlined text-[22px]">bookmark</span>
+              <span class="text-xs font-semibold">保存</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400"><%= @post.user.name %></p>
+        </div>
+      </article>
+    </div>
+
+    <div class="w-full max-w-lg flex flex-col gap-6">
+      <h4 class="text-xs font-bold text-slate-400 px-2 uppercase tracking-widest flex items-center gap-2">
+        <span class="w-1 h-1 bg-primary rounded-full"></span>
+        同じカテゴリー
+      </h4>
+      <% if @related_posts.any? %>
+        <div class="grid grid-cols-2 gap-4">
+          <% @related_posts.each do |post| %>
+            <%= link_to post_path(post, from: @post.id), class: "p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer group flex flex-col justify-between h-full block", data: { turbo_frame: "_top" } do %>
+              <p class="text-sm font-serif text-slate-700 dark:text-slate-300 line-clamp-3 mb-4 group-hover:text-slate-900 dark:group-hover:text-white leading-relaxed quote-text">
+                <%= post.body %>
+              </p>
+              <p class="text-[10px] text-slate-400 font-medium">— <%= post.work_name %></p>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="flex justify-center mt-2">
+          <%= link_to "もっと見る", posts_path(category: @post.category), class: "px-8 py-2.5 text-sm font-bold text-slate-500 hover:text-primary border border-slate-200 dark:border-slate-800 rounded-full hover:border-primary/30 bg-white dark:bg-slate-900 transition-all shadow-sm" %>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 dark:text-slate-400">同じカテゴリーの投稿はまだありません。</p>
+      <% end %>
+    </div>
+  </main>
+</div>

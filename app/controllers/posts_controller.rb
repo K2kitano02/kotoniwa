@@ -31,6 +31,10 @@ class PostsController < ApplicationController
       redirect_to posts_path, alert: "指定の投稿は表示できません"
       return
     end
+    # 同じカテゴリーの投稿を2件取得（今の投稿と、遷移元の投稿は除外）
+    relation = Post.public_post.where(category: @post.category).where.not(id: @post.id)
+    relation = relation.where.not(id: params[:from]) if params[:from].present?
+    @related_posts = relation.order(created_at: :desc).limit(2)
   end
 
   def edit

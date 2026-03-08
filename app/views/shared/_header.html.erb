@@ -5,6 +5,7 @@
       <span class="text-xl font-semibold tracking-widest">言庭</span>
     </div>
     <nav class="hidden md:flex items-center gap-8 text-sm tracking-widest">
+      <%= link_to "投稿一覧", posts_path, class: "hover:text-primary transition-colors" %>
       <% if current_user %>
         <%= button_to "ログアウト", logout_path, method: :delete, class: "hover:text-primary transition-colors bg-transparent border-none cursor-pointer p-0 font-inherit text-sm tracking-widest" %>
       <% else %>
