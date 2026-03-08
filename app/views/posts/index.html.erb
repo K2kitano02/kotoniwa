@@ -27,25 +27,40 @@
     <%# 投稿カードグリッド %>
     <div class="masonry-grid">
       <% @posts.each do |post| %>
-        <%= link_to post_path(post), class: "block bg-white dark:bg-slate-800 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col justify-between group hover:shadow-md transition-shadow min-h-[240px]" do %>
-          <div>
-            <span class="material-symbols-outlined text-primary/40 text-4xl mb-4">format_quote</span>
-            <p class="text-xl font-medium leading-relaxed text-slate-800 dark:text-slate-100 mb-6 line-clamp-3">
-              <%= post.body %>
-            </p>
-          </div>
-          <div class="flex items-center justify-between mt-4">
-            <span class="text-sm text-slate-500 dark:text-slate-400 truncate"><%= post.work_name %></span>
-            <div class="flex gap-2 shrink-0">
-              <span class="p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex">
-                <span class="material-symbols-outlined text-xl">favorite</span>
-              </span>
-              <span class="p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex">
-                <span class="material-symbols-outlined text-xl">bookmark</span>
-              </span>
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col justify-between group hover:shadow-md transition-shadow min-h-[240px]">
+          <%= link_to post_path(post), class: "block flex-1 min-h-0 flex flex-col" do %>
+            <div>
+              <span class="material-symbols-outlined text-primary/40 text-4xl mb-4">format_quote</span>
+              <p class="text-xl font-medium leading-relaxed text-slate-800 dark:text-slate-100 mb-6 line-clamp-3">
+                <%= post.body %>
+              </p>
             </div>
+            <span class="text-sm text-slate-500 dark:text-slate-400 truncate block mt-4"><%= post.work_name %></span>
+          <% end %>
+          <div class="flex items-center justify-end gap-2 mt-4 shrink-0">
+            <% if current_user %>
+              <% if like_by_current_user?(post) %>
+                <%= button_to post_like_path(post), method: :delete, class: "p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex items-center gap-1 bg-transparent border-none cursor-pointer", title: "いいねを解除" do %>
+                  <span class="material-symbols-outlined text-xl">favorite</span>
+                  <span class="text-xs font-semibold"><%= post.likes.count %></span>
+                <% end %>
+              <% else %>
+                <%= button_to post_like_path(post), method: :post, class: "p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex items-center gap-1 bg-transparent border-none cursor-pointer", title: "いいね" do %>
+                  <span class="material-symbols-outlined text-xl">favorite</span>
+                  <span class="text-xs font-semibold"><%= post.likes.count %></span>
+                <% end %>
+              <% end %>
+            <% else %>
+              <span class="p-2 rounded-full text-slate-400 inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-xl">favorite</span>
+                <span class="text-xs font-semibold"><%= post.likes.count %></span>
+              </span>
+            <% end %>
+            <span class="p-2 rounded-full hover:bg-primary/10 text-slate-400 group-hover:text-primary transition-colors inline-flex">
+              <span class="material-symbols-outlined text-xl">bookmark</span>
+            </span>
           </div>
-        <% end %>
+        </div>
       <% end %>
 
       <%# 綴る CTA カード（ログイン時は新規投稿、未ログイン時はログインへ） %>

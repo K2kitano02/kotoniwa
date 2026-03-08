@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :likes, dependent: :destroy
 
   #種類を数値ではなく名前で扱う
   enum :category, {  anime: 0, movie: 1, music: 2, person: 3, other: 4 }

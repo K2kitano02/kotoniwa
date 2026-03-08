@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   root "tops#index"
   resources :users, only: %i[new create edit update]
   resource :session, only: %i[new create destroy]
-  resources :posts
+  resources :posts do
+    resource :like, only: %i[create destroy]
+  end
 
   get "/signup" => "users#new", as: :signup
   post "/signup" => "users#create"
